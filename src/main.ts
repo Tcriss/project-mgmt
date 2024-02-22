@@ -9,7 +9,7 @@ async function bootstrap() {
     app.use(morgan('dev'));
     app.enableCors(cors);
 
-    await app.listen(AppModule.port);
+    await app.listen(AppModule.port, '0.0.0.0');
     console.log(`Application running on: ${await app.getUrl()}`);
 }
 bootstrap();

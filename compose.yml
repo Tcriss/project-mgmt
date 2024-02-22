@@ -1,0 +1,9 @@
+services:
+  api:
+    container_name: prject-mgmt
+    build: .
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT}
+    ports:
+      - ${PORT}:2000
