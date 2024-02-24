@@ -6,8 +6,8 @@ import { ConnectionModule } from "./connection/connection.module";
 @Module({
     imports: [
         ConfigModule.forRoot({isGlobal: true}),
+        ConnectionModule,
         UserModule,
-        ConnectionModule
     ]
 })
 export class AppModule {

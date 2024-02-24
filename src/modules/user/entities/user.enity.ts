@@ -25,7 +25,7 @@ export class User extends Base implements UserI {
     password: string;
 
     @Column({type: 'enum', enum: Roles})
-    role: string;
+    role: Roles;
 
     @ManyToOne(() => Project, (project) => project.user)
     projects: Project[];

@@ -9,10 +9,10 @@ export const ConnectionProvider: DynamicModule = TypeOrmModule.forRootAsync({
         const isDevEnv: boolean = config.get('NODE_ENV') !== Environment.Production;
         const connection: TypeOrmModuleOptions = {
             type: 'postgres',
-            host: config.get('HOST'),
-            port: config.get('PORT'),
+            host: 'localhost',
+            port: 5432,
             username: config.get('DB_USER'),
-            password: config.get('DB_PW'),
+            password: config.get('DB_PASSWORD'),
             database: config.get('DB_NAME'),
             autoLoadEntities: true,
             synchronize: isDevEnv
