@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne } from "typeorm";
 import { Roles } from "src/common/enums";
 import { UserI } from "src/common/interfaces";
 import { Base } from "src/common/utils/base.entity";
-import { Project } from "src/modules/projects/entities";
+import { UserProjects } from "./user-projects.entity";
 
 @Entity({name: 'user'})
 export class User extends Base implements UserI {
@@ -27,6 +27,6 @@ export class User extends Base implements UserI {
     @Column({type: 'enum', enum: Roles})
     role: Roles;
 
-    @ManyToOne(() => Project, (project) => project.user)
-    projects: Project[];
+    @ManyToOne(() => UserProjects, (project) => project.user)
+    projects: UserProjects[];
 }
