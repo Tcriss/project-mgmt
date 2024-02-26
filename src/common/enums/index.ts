@@ -1,2 +1,2 @@
 export { Roles } from './roles.enum';
-export { AccesLevel } from './access-level.enum';
+export { AccessLevel } from './access-level.enum';

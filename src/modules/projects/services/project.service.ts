@@ -18,7 +18,7 @@ export class ProjectService {
     }
 
     public async findOneProject(uuid: string): Promise<Project> {
-        const project: Project = await this.projectRepository.findOneBy([{uuid: uuid}]);
+        const project: Project = await this.projectRepository.findOneBy([{id: uuid}]);
 
         if (!project) throw new HttpException('Project not found', HttpStatus.NOT_FOUND);
         if (project) return project;

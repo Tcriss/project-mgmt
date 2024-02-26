@@ -1,17 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto, EditUserDto } from '../dto';
 import { User } from '../entities';
 import { ResponseI } from 'src/common/interfaces';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
 
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
+    constructor(
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        private readonly config: ConfigService
+    ) { }
 
     public async findAllUsers(): Promise<User[]> {
-        const users: User[] = await this.userRepository.find();
+        const users: User[] = await this.userRepository.find({relations: ['projects']});
 
         if (users.length == 0) throw new HttpException('There are no users', HttpStatus.NO_CONTENT);
         if (users == null || users == undefined) throw new HttpException('Opps!, something went wrong', HttpStatus.INTERNAL_SERVER_ERROR)
@@ -20,7 +25,15 @@ export class UserService {
     }
 
     public async findOneUser(uuid: string): Promise<User> {
-        const user: User = await this.userRepository.findOneBy({ uuid: uuid });
+        const user: User = await this.userRepository.findOneBy({ id: uuid });
+
+        if (!user) throw new HttpException('No user found with this uuid', HttpStatus.NO_CONTENT);
+
+        return user;
+    }
+
+    public async findUserBy({key, value}: {key: keyof User, value: unknown}): Promise<User> {
+        const user: User = await this.userRepository.findOne({where: {[key]: value}});
 
         if (!user) throw new HttpException('No user found with this uuid', HttpStatus.NO_CONTENT);
 
@@ -28,13 +41,14 @@ export class UserService {
     }
 
     public async createUser(user: CreateUserDto): Promise<ResponseI> {
-        const userRes: User = await this.userRepository.save(user);
+        user.password = await bcrypt.hash(user.password, +this.config.get('HASH_SALT'));;
+        const creation: User = await this.userRepository.save(user);
 
-        if (!userRes) throw new HttpException('Opps! something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
-        if (userRes) {
+        if (!creation) throw new HttpException('Opps! something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
+        if (creation) {
             const res: ResponseI = {
                 message: 'User created succesfully',
-                data: userRes
+                data: creation
             }
 
             return res;

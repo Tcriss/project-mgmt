@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { UserService } from '../services/user.service';
 import { CreateUserDto, EditUserDto } from '../dto';
@@ -10,16 +10,19 @@ export class UserController {
 
     constructor(private readonly userService: UserService) {}
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get()
     findAll(): Promise<User[]> {
         return this.userService.findAllUsers();
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get(':uuid')
     findOne(@Param('uuid') uuid: string): Promise<User> {
         return this.userService.findOneUser(uuid);
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Post()
     create(@Body() user: CreateUserDto): Promise<ResponseI> {
         return this.userService.createUser(user);

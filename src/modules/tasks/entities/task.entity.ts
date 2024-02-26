@@ -19,5 +19,5 @@ export class Task extends Base implements TaskI {
     assigned: string;
 
     @ManyToOne(() => Project, (project) => project.tasks)
-    project: Project;
+    projectId: Project;
 }

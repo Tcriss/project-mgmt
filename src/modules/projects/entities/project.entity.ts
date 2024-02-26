@@ -12,9 +12,9 @@ export class Project extends Base implements ProjectI {
     @Column()
     description: string;
     
-    @OneToMany(() => Task, (task) => task.project)
+    @OneToMany(() => Task, (task) => task.projectId)
     tasks: Task[];
 
     @OneToMany(() => User, (user) => user.projects)
-    user: User;
+    userId: User;
 }

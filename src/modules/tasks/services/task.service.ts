@@ -18,7 +18,7 @@ export class TaskService {
     }
 
     public async findOneTask(uuid: string): Promise<Task> {
-        const task: Task = await this.taskRepository.findOneBy({uuid: uuid});
+        const task: Task = await this.taskRepository.findOneBy({id: uuid});
 
         if (!task) throw new HttpException('Task not found', HttpStatus.NOT_FOUND);
         if (task) return task;

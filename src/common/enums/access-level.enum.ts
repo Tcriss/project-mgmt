@@ -1,5 +1,5 @@
-export enum AccesLevel {
-    MANTEINER = 50,
-    OWNER = 60,
-    USER = 40
+export enum AccessLevel {
+    READER = 20,
+    COLABORATOR = 40,
+    OWNER = 80,
 }

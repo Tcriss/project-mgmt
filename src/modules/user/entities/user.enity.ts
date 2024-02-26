@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne } from "typeorm";
+import { Exclude } from "class-transformer";
 import { Roles } from "src/common/enums";
 import { UserI } from "src/common/interfaces";
 import { Base } from "src/common/utils/base.entity";
@@ -22,11 +23,12 @@ export class User extends Base implements UserI {
     userName: string;
 
     @Column()
+    @Exclude()
     password: string;
 
     @Column({type: 'enum', enum: Roles})
     role: Roles;
 
-    @ManyToOne(() => UserProjects, (project) => project.user)
+    @ManyToOne(() => UserProjects, (project) => project.userId)
     projects: UserProjects[];
 }
