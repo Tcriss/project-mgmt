@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne } from "typeorm";
 import { Exclude } from "class-transformer";
 import { Roles } from "src/common/enums";
 import { UserI } from "src/common/interfaces";
-import { Base } from "src/common/utils/base.entity";
+import { Base } from "src/common/entities/base.entity";
 import { UserProjects } from "./user-projects.entity";
 
 @Entity({name: 'user'})
