@@ -1,16 +1,25 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
+import { UserService } from 'src/modules/user/services/user.service';
 import { AuthDto } from '../dto/auth.dto';
 import { PublicAcces } from 'src/common/decorators/public.decorator';
+import { ResponseI } from 'src/common/interfaces';
+import { CreateUserDto } from 'src/modules/user/dto';
 
-@Controller('auth')
+@PublicAcces()
+@Controller()
 export class AuthController {
 
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
-    @PublicAcces()
-    @Post()
+    @Post('login')
     login(@Body() auth: AuthDto): Promise<unknown> {
         return this.authService.generateJwt(auth.userId, auth.password, auth.userName, auth.email);
+    }
+
+    @UseInterceptors(ClassSerializerInterceptor)
+    @Post('register')
+    register(@Body() user: CreateUserDto): Promise<ResponseI> {
+        return this.userService.createUser(user);
     }
 }

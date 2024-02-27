@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Req, UseInterceptors } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { CreateUserDto, EditUserDto } from '../dto';
 import { User } from '../entities';
@@ -11,7 +11,8 @@ export class UserController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @Get()
-    findAll(): Promise<User[]> {
+    findAll(@Req() req: Request): Promise<User[]> {
+        console.log('user: ', req['user']);
         return this.userService.findAllUsers();
     }
 

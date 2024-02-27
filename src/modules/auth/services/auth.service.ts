@@ -19,16 +19,24 @@ export class AuthService {
         return await this.jwt.signAsync(payload);
     }
 
-    private async checkCredentials(password: string, userName?: string, email?: string): Promise<boolean> {
-        const getUsername: User = await this.userService.findUserBy({ key: 'userName', value: userName });
-        const getEmail: User = await this.userService.findUserBy({ key: 'email', value: email });
+    private async checkCredentials(user: User, password: string, userName?: string, email?: string): Promise<boolean> {
+        if (userName) {
+            const getUsername: User = await this.userService.findUserBy({ key: 'userName', value: userName });
 
-        if (getUsername) {
+            if (user.id != getUsername.id) throw new HttpException("User id and email/username doesn't match", HttpStatus.BAD_REQUEST);
+
             const match = await bcrypt.compare(password, getUsername.password);
+
             if (match) return match;
         };
-        if (getEmail) {
+
+        if (email) {
+            const getEmail: User = await this.userService.findUserBy({ key: 'email', value: email });
+
+            if (user.id != getEmail.id) throw new HttpException("User id and email/username doesn't match", HttpStatus.BAD_REQUEST);
+
             const match = await bcrypt.compare(password, getEmail.password);
+
             if (match) return match;
         };
 
@@ -36,10 +44,10 @@ export class AuthService {
     }
 
     public async generateJwt(userId: string, password: string, userName?: string, email?: string,): Promise<unknown> {
-        const checking: boolean = await this.checkCredentials(password, userName, email);
+        const user: User = await this.userService.findOneUser(userId);
+        const checking: boolean = await this.checkCredentials(user, password, userName, email);
 
         if (checking) {
-            const user: User = await this.userService.findOneUser(userId);
             const payload: PayloadTokenI = {
                 sub: user.id,
                 role: user.role
@@ -50,7 +58,8 @@ export class AuthService {
                 user: user
             };
         };
-        if (!checking) throw new HttpException("Check your credentials", HttpStatus.UNAUTHORIZED);
+
+        throw new HttpException("Check your credentials", HttpStatus.UNAUTHORIZED);
     }
 
     public async verifyToken(token: string): Promise<unknown> {
