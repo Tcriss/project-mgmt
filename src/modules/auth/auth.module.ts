@@ -1,41 +1,27 @@
-import { Inject, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { UserModule } from '../user/user.module';
 import { User } from '../user/entities';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtProvider } from './providers/jwt.provider';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   providers: [
-    AuthService, 
+    AuthService,
     {
-      provide: APP_GUARD, 
+      provide: APP_GUARD,
       useClass: AuthGuard
-    },
+    }
   ],
   controllers: [AuthController],
   imports: [
-    TypeOrmModule.forFeature([User]), 
-    JwtModule.register({
-      global: true,
-      secret: AuthModule.secret,
-      signOptions: {
-        expiresIn: 60,
-        algorithm: 'HS256'
-      }
-    }),
+    TypeOrmModule.forFeature([User]),
+    JwtProvider,
     UserModule
-  ]
+  ],
+  exports: [JwtProvider]
 })
-export class AuthModule {
-
-  static secret: string;
-
-  constructor(private readonly config: ConfigService) {
-    AuthModule.secret = this.config.get('JWT_SECRET');
-  }
-}
+export class AuthModule {}

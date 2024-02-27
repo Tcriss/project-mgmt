@@ -11,12 +11,12 @@ export class AuthService {
 
     constructor(
         private readonly jwt: JwtService,
-        private readonly userService: UserService,
-        private readonly config: ConfigService
+        private userService: UserService,
+        private config: ConfigService
     ) { }
 
     private async getAccessToken(payload: {sub: string, role: string}): Promise<string> {
-        return await this.jwt.signAsync(payload);;
+        return await this.jwt.signAsync(payload);
     }
 
     private async checkCredentials(password: string, userName?: string, email?: string): Promise<boolean> {
@@ -51,5 +51,9 @@ export class AuthService {
             };
         };
         if (!checking) throw new HttpException("Check your credentials", HttpStatus.UNAUTHORIZED);
+    }
+
+    public async verifyToken(token: string): Promise<unknown> {
+        return await this.jwt.verifyAsync(token, {secret: this.config.get('JWT_SECRET')});
     }
 }

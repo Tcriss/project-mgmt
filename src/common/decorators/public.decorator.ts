@@ -1,4 +1,4 @@
 import { SetMetadata } from "@nestjs/common";
+import { PUBLIC_KEY } from "../constants";
 
-export const IS_PUBLIC_KEY = 'IsPublic';
-export const PublicRoute = () => SetMetadata(IS_PUBLIC_KEY, true)
+export const PublicAcces = () => SetMetadata(PUBLIC_KEY, true);

@@ -5,7 +5,7 @@ import { Environment } from "src/common/enums/environment.enum";
 
 export const ConnectionProvider: DynamicModule = TypeOrmModule.forRootAsync({
     inject: [ConfigService],
-    async useFactory(config: ConfigService) {
+    useFactory: async (config: ConfigService) => {
         const isDevEnv: boolean = config.get('NODE_ENV') !== Environment.Production;
         const connection: TypeOrmModuleOptions = {
             type: 'postgres',

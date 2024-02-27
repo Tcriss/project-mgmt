@@ -1,5 +1,4 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { UserService } from '../services/user.service';
 import { CreateUserDto, EditUserDto } from '../dto';
 import { User } from '../entities';
