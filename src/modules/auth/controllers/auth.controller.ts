@@ -14,7 +14,7 @@ export class AuthController {
 
     @Post('login')
     login(@Body() auth: AuthDto): Promise<unknown> {
-        return this.authService.generateJwt(auth.userId, auth.password, auth.userName, auth.email);
+        return this.authService.login(auth.password, auth.userName, auth.email);
     }
 
     @UseInterceptors(ClassSerializerInterceptor)

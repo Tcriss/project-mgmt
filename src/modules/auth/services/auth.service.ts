@@ -19,47 +19,35 @@ export class AuthService {
         return await this.jwt.signAsync(payload);
     }
 
-    private async checkCredentials(user: User, password: string, userName?: string, email?: string): Promise<boolean> {
-        if (userName) {
-            const getUsername: User = await this.userService.findUserBy({ key: 'userName', value: userName });
+    private async checkCredentials(password: string, credentials: User): Promise<boolean> {
+        const match: boolean = await bcrypt.compare(password, credentials.password);
 
-            if (user.id != getUsername.id) throw new HttpException("User id and email/username doesn't match", HttpStatus.BAD_REQUEST);
-
-            const match = await bcrypt.compare(password, getUsername.password);
-
-            if (match) return match;
-        };
-
-        if (email) {
-            const getEmail: User = await this.userService.findUserBy({ key: 'email', value: email });
-
-            if (user.id != getEmail.id) throw new HttpException("User id and email/username doesn't match", HttpStatus.BAD_REQUEST);
-
-            const match = await bcrypt.compare(password, getEmail.password);
-
-            if (match) return match;
-        };
+        if (match) return match;
 
         return false;
     }
 
-    public async generateJwt(userId: string, password: string, userName?: string, email?: string,): Promise<unknown> {
-        const user: User = await this.userService.findOneUser(userId);
-        const checking: boolean = await this.checkCredentials(user, password, userName, email);
-
-        if (checking) {
-            const payload: PayloadTokenI = {
-                sub: user.id,
-                role: user.role
-            };
-
-            return {
-                accesToken: await this.getAccessToken(payload),
-                user: user
-            };
+    private async generateJwt(credentials: User): Promise<string> {
+        const payload: PayloadTokenI = {
+            sub: credentials.id,
+            role: credentials.role
         };
+        const accesToken: string = await this.getAccessToken(payload);
 
-        throw new HttpException("Check your credentials", HttpStatus.UNAUTHORIZED);
+        return accesToken;
+    }
+
+    public async login(password: string, userName?: string, email?: string): Promise<string> {
+        let credentials: User;
+
+        if (userName) credentials = await this.userService.findUserBy({ key: 'userName', value: userName });
+        if (email) credentials = await this.userService.findUserBy({ key: 'email', value: email });
+
+        const isChecked: boolean = await this.checkCredentials(password, credentials);
+
+        if (!isChecked) throw new HttpException('This credentials are wrong, check again', HttpStatus.UNAUTHORIZED);
+
+        return await this.generateJwt(credentials);
     }
 
     public async verifyToken(token: string): Promise<unknown> {
