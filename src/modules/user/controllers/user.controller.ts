@@ -3,7 +3,9 @@ import { UserService } from '../services/user.service';
 import { CreateUserDto, EditUserDto } from '../dto';
 import { User } from '../entities';
 import { ResponseI } from 'src/common/interfaces';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
 

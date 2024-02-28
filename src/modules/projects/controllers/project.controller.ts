@@ -3,7 +3,9 @@ import { CreateProjectDto, EditProjectDto } from '../dto';
 import { ProjectService } from '../services/project.service';
 import { ResponseI } from 'src/common/interfaces';
 import { Project } from '../entities';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Projects')
 @Controller('projects')
 export class ProjectController {
 
