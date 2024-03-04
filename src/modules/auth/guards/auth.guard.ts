@@ -1,6 +1,7 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthService } from "../services/auth.service";
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+
+import { AuthService } from "../services/auth.service";
 import { PUBLIC_KEY } from "src/common/constants";
 
 @Injectable()
@@ -11,14 +12,16 @@ export class AuthGuard implements CanActivate {
         private readonly reflector: Reflector
     ) {}
 
-    private async extractTokenFromHeader(req: Request): Promise<string> {
-        const [type, token] = req.headers['auth']?.split(' ') ?? [];
+    private async extractTokenFromHeader(headers: Headers): Promise<string> {
+        const [type, token] = headers['auth']?.split(' ') ?? [];
 
         return type === 'Bearer' ? token : undefined;
     }
 
     private async verifyToken(req: Request): Promise<boolean> {
-        const token: string = await this.extractTokenFromHeader(req);
+        if (!req.headers) throw new HttpException('No headers provided', HttpStatus.BAD_REQUEST);
+
+        const token: string = await this.extractTokenFromHeader(req.headers);
 
         if (!token) throw new UnauthorizedException('Invalid token');
 

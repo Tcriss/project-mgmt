@@ -1,11 +1,12 @@
 import { Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { AuthService } from '../services/auth.service';
 import { UserService } from 'src/modules/user/services/user.service';
 import { AuthDto } from '../dto/auth.dto';
 import { PublicAcces } from 'src/common/decorators/public.decorator';
 import { ResponseI } from 'src/common/interfaces';
 import { CreateUserDto } from 'src/modules/user/dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Authentication')
 @PublicAcces()

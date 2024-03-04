@@ -1,8 +1,9 @@
 import { Column, Entity, ManyToOne } from "typeorm";
-import { AccessLevel } from "src/common/enums";
+
 import { User } from "./user.enity";
-import { Project } from "src/modules/projects/entities";
 import { Base } from "src/common/entities/base.entity";
+import { Project } from "src/modules/projects/entities";
+import { AccessLevel } from "src/common/enums";
 
 @Entity('user_projects')
 export class UserProjects extends Base {

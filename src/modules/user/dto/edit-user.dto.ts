@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEmail, IsEnum, IsOptional, IsString } from "class-validator";
+
 import { Roles } from "src/common/enums";
 
 export class EditUserDto {

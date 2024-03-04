@@ -1,8 +1,9 @@
 import { IsEnum, IsNotEmpty, IsUUID } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+
 import { AccessLevel } from "src/common/enums";
 import { User } from "../entities";
 import { Project } from "src/modules/projects/entities";
-import { ApiProperty } from "@nestjs/swagger";
 
 export class RelateProjectDto {
     @ApiProperty()

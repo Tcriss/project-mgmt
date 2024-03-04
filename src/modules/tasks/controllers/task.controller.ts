@@ -1,9 +1,10 @@
 import { Controller, Body, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { TaskService } from '../services/task.service';
 import { Task } from '../entities/task.entity';
 import { ResponseI } from 'src/common/interfaces';
 import { CreateTaskDto, EditTaskDto } from '../dto';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Tasks')
 @Controller('tasks')

@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { Project } from '../entities';
 import { ResponseI } from 'src/common/interfaces';
 import { CreateProjectDto, EditProjectDto } from '../dto';

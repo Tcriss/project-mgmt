@@ -1,8 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { RelateProjectService } from '../services/relate-project.service';
 import { RelateProjectDto } from '../dto';
 import { ResponseI } from 'src/common/interfaces';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Relate')
 @Controller('relate')
